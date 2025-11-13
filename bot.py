@@ -7,7 +7,11 @@ Telegram Leads Bot - Leads Deal Management
 import logging
 import os
 from datetime import datetime
+from dotenv import load_dotenv
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, BotCommand
+
+# Load environment variables from .env file
+load_dotenv()
 from telegram.ext import (
     Application,
     CommandHandler,
