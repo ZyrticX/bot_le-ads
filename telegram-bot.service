@@ -1,0 +1,16 @@
+[Unit]
+Description=Telegram Leads Bot
+After=network.target
+
+[Service]
+Type=simple
+User=YOUR_USERNAME_HERE
+WorkingDirectory=/home/YOUR_USERNAME_HERE/telegram-leads-bot
+Environment="PATH=/home/YOUR_USERNAME_HERE/telegram-leads-bot/venv/bin"
+EnvironmentFile=/home/YOUR_USERNAME_HERE/telegram-leads-bot/.env
+ExecStart=/home/YOUR_USERNAME_HERE/telegram-leads-bot/venv/bin/python bot.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
