@@ -210,7 +210,61 @@ Sell Price: 8
         action = query.data.replace("menu_", "")
         
         if action == "help":
-            await self.help_command(update, context)
+            help_message = """
+📚 **Leads Management Bot - User Guide**
+
+This bot helps you manage lead deals and track them in Airtable CRM.
+
+**📝 Main Features:**
+
+**1. Create New Deal** (`/newdeal`)
+   • Reply to any message with `/newdeal`
+   • The bot will parse the message and extract:
+     - Client & Supplier names
+     - Quantity & Country
+     - Prices & Profit
+   • Data is saved to Airtable automatically
+
+**2. Add Client/Supplier** (`/newclient`)
+   • Add a new client or supplier to the database
+   • Choose type: Client or Supplier
+   • Enter name and save
+
+**3. Record Payment** (`/payment`)
+   • Record payments received or sent
+   • Select deal from list
+   • Enter amount
+   • Tracked in Airtable Payments table
+
+**4. View Deals** (`/deals`)
+   • See all active deals
+   • Summary with key information
+   • Direct links to Airtable
+
+**5. View Clients** (`/clients`)
+   • List all clients and suppliers
+   • See contact information
+   • Quick reference
+
+**6. Statistics** (`/stats`)
+   • Total number of deals
+   • Total clients and suppliers
+   • Total payments recorded
+   • Overall performance metrics
+
+**💡 Tips:**
+• Use `/newdeal` as a reply to messages for automatic parsing
+• Keep your Airtable data organized
+• Check statistics regularly
+• Type /cancel to stop any operation
+• Contact support if you encounter issues
+
+---
+
+✨ Created By **Corporation2024**
+🔗 Powered by Telegram Bot API & Airtable
+            """
+            await query.message.reply_text(help_message, parse_mode='Markdown')
         elif action == "newdeal":
             await query.message.reply_text(
                 "📝 **Create New Deal**\n\n"
@@ -221,15 +275,36 @@ Sell Price: 8
                 parse_mode='Markdown'
             )
         elif action == "newclient":
-            await self.newclient_command(query, context)
+            # Create a new Update object with message context for conversation handler
+            new_update = Update(
+                update_id=update.update_id,
+                message=query.message
+            )
+            await self.newclient_command(new_update, context)
         elif action == "payment":
-            await self.payment_command(query, context)
+            new_update = Update(
+                update_id=update.update_id,
+                message=query.message
+            )
+            await self.payment_command(new_update, context)
         elif action == "stats":
-            await self.stats_command(query, context)
+            new_update = Update(
+                update_id=update.update_id,
+                message=query.message
+            )
+            await self.stats_command(new_update, context)
         elif action == "deals":
-            await self.deals_command(query, context)
+            new_update = Update(
+                update_id=update.update_id,
+                message=query.message
+            )
+            await self.deals_command(new_update, context)
         elif action == "clients":
-            await self.clients_command(query, context)
+            new_update = Update(
+                update_id=update.update_id,
+                message=query.message
+            )
+            await self.clients_command(new_update, context)
 
     async def newdeal_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """New deal command - create new deal"""
