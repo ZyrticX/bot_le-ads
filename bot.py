@@ -9,6 +9,7 @@ import os
 from datetime import datetime
 from dotenv import load_dotenv
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, BotCommand
+from telegram.request import HTTPXRequest
 
 # Load environment variables from .env file
 load_dotenv()
@@ -665,8 +666,23 @@ def main():
     # Create bot instance
     bot = LeadsBot()
     
-    # Create Application with post_init callback
-    application = Application.builder().token(TOKEN).post_init(post_init).build()
+    # Configure request with longer timeouts and retries
+    request = HTTPXRequest(
+        connection_pool_size=8,
+        connect_timeout=30.0,
+        read_timeout=30.0,
+        write_timeout=30.0,
+        pool_timeout=30.0,
+    )
+    
+    # Create Application with post_init callback and custom request settings
+    application = (
+        Application.builder()
+        .token(TOKEN)
+        .request(request)
+        .post_init(post_init)
+        .build()
+    )
     
     # Add Handlers
     
@@ -689,7 +705,10 @@ def main():
                 MessageHandler(filters.TEXT & ~filters.COMMAND, bot.receive_deal_details)
             ]
         },
-        fallbacks=[CommandHandler("cancel", bot.cancel)]
+        fallbacks=[CommandHandler("cancel", bot.cancel)],
+        per_message=False,
+        per_chat=True,
+        per_user=True
     )
     application.add_handler(newdeal_conv)
     
@@ -704,7 +723,10 @@ def main():
                 MessageHandler(filters.TEXT & ~filters.COMMAND, bot.receive_client_name)
             ]
         },
-        fallbacks=[CommandHandler("cancel", bot.cancel)]
+        fallbacks=[CommandHandler("cancel", bot.cancel)],
+        per_message=False,
+        per_chat=True,
+        per_user=True
     )
     application.add_handler(newclient_conv)
     
@@ -719,7 +741,10 @@ def main():
                 MessageHandler(filters.TEXT & ~filters.COMMAND, bot.receive_payment_amount)
             ]
         },
-        fallbacks=[CommandHandler("cancel", bot.cancel)]
+        fallbacks=[CommandHandler("cancel", bot.cancel)],
+        per_message=False,
+        per_chat=True,
+        per_user=True
     )
     application.add_handler(payment_conv)
     
